@@ -26,7 +26,7 @@ n = trips.count()
 
 print("\n=== SILVER / trips — nettoyage ===")
 
-# 1. Nulls dans les colonnes critiques
+# Update of a comment 
 crit = ["pickup_date", "PULocationID", "DOLocationID", "pu_borough",
         "do_borough", "fare_amount", "total_amount", "trip_distance",
         "trip_duration_min"]
