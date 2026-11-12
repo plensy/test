@@ -1,0 +1,104 @@
+{
+  "started_at": "2026-07-05T13:44:26.359401+00:00",
+  "ended_at": "2026-07-05T13:49:14.721369+00:00",
+  "duration_s": 288.4,
+  "success": true,
+  "steps": {
+    "bronze_taxi": {
+      "name": "bronze_taxi",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 28.5,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "bronze_zones": {
+      "name": "bronze_zones",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 11.4,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "bronze_weather": {
+      "name": "bronze_weather",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 17.4,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "silver_weather_daily": {
+      "name": "silver_weather_daily",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 15.3,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "silver_trips": {
+      "name": "silver_trips",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 85.7,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "quality_gate": {
+      "name": "quality_gate",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 65.3,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "gold_datamarts": {
+      "name": "gold_datamarts",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 25.6,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "ml_demand_forecast": {
+      "name": "ml_demand_forecast",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 39.1,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,303 @@
+{
+  "Comment": "Pipeline NYC Taxi — Bronze -> Silver -> Qualite -> Gold -> ML. Chaque état Glue correspond à un module sous src/. Retries sur erreurs transitoires Glue ; échec métier (qualité) => notification + arrêt, pas de retry aveugle.",
+  "StartAt": "IngestBronze",
+  "States": {
+    "IngestBronze": {
+      "Type": "Parallel",
+      "Comment": "3 sources indépendantes ingérées en parallèle (taxi, zones, météo).",
+      "Branches": [
+        {
+          "StartAt": "BronzeTaxi",
+          "States": {
+            "BronzeTaxi": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "nyc-pipeline-bronze-taxi"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Glue.ConcurrentRunsExceededException",
+                    "States.Timeout",
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "BronzeTaxiFailed"
+                }
+              ],
+              "End": true
+            },
+            "BronzeTaxiFailed": {
+              "Type": "Fail",
+              "Error": "BronzeTaxiFailed"
+            }
+          }
+        },
+        {
+          "StartAt": "BronzeZones",
+          "States": {
+            "BronzeZones": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "nyc-pipeline-bronze-zones"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Glue.ConcurrentRunsExceededException",
+                    "States.Timeout",
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "BronzeZonesFailed"
+                }
+              ],
+              "End": true
+            },
+            "BronzeZonesFailed": {
+              "Type": "Fail",
+              "Error": "BronzeZonesFailed"
+            }
+          }
+        },
+        {
+          "StartAt": "BronzeWeather",
+          "States": {
+            "BronzeWeather": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "nyc-pipeline-bronze-weather"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Glue.ConcurrentRunsExceededException",
+                    "States.Timeout",
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "BronzeWeatherFailed"
+                }
+              ],
+              "End": true
+            },
+            "BronzeWeatherFailed": {
+              "Type": "Fail",
+              "Error": "BronzeWeatherFailed"
+            }
+          }
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error",
+          "Next": "NotifyFailure"
+        }
+      ],
+      "Next": "SilverWeatherDaily"
+    },
+    "SilverWeatherDaily": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "nyc-pipeline-silver-weather-daily"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.ConcurrentRunsExceededException",
+            "States.Timeout",
+            "States.TaskFailed"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error",
+          "Next": "NotifyFailure"
+        }
+      ],
+      "Next": "SilverTrips"
+    },
+    "SilverTrips": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Comment": "Nettoyage + jointures zones/météo + features. Dépend de Bronze (taxi, zones) et de SilverWeatherDaily.",
+      "Parameters": {
+        "JobName": "nyc-pipeline-silver-trips"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Glue.ConcurrentRunsExceededException",
+            "States.Timeout",
+            "States.TaskFailed"
+          ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error",
+          "Next": "NotifyFailure"
+        }
+      ],
+      "Next": "QualityGate"
+    },
+    "QualityGate": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Comment": "Great Expectations. Code sortie != 0 si une règle critique échoue -> States.TaskFailed (pas de retry : échec métier, pas transitoire).",
+      "Parameters": {
+        "JobName": "nyc-pipeline-quality-checks"
+      },
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error",
+          "Next": "NotifyFailure"
+        }
+      ],
+      "Next": "PostQuality"
+    },
+    "PostQuality": {
+      "Type": "Parallel",
+      "Comment": "Gold datamarts et prévision ML sont indépendants (tous deux lisent silver/trips) -> exécution parallèle.",
+      "Branches": [
+        {
+          "StartAt": "GoldDatamarts",
+          "States": {
+            "GoldDatamarts": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "nyc-pipeline-gold-datamarts"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Glue.ConcurrentRunsExceededException",
+                    "States.Timeout",
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "MLDemandForecast",
+          "States": {
+            "MLDemandForecast": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": {
+                "JobName": "nyc-pipeline-ml-demand-forecast"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Glue.ConcurrentRunsExceededException",
+                    "States.Timeout",
+                    "States.TaskFailed"
+                  ],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ],
+              "End": true
+            }
+          }
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error",
+          "Next": "NotifyFailure"
+        }
+      ],
+      "Next": "NotifySuccess"
+    },
+    "NotifySuccess": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "${AlertsTopicArn}",
+        "Subject": "Pipeline NYC Taxi : succès",
+        "Message": "Exécution terminée avec succès. Bronze -> Silver -> Qualité -> Gold -> ML."
+      },
+      "End": true
+    },
+    "NotifyFailure": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "${AlertsTopicArn}",
+        "Subject": "Pipeline NYC Taxi : ÉCHEC",
+        "Message.$": "States.Format('Échec de la pipeline. Détail : {}', $.error)"
+      },
+      "Next": "PipelineFailed"
+    },
+    "PipelineFailed": {
+      "Type": "Fail",
+      "Error": "PipelineFailed"
+    }
+  }
+}

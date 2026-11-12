@@ -1,0 +1,10 @@
+artifact_location: file:///Users/selmas/Documents/PROJET%20DATA%20PIPELINE/mlruns/494149610894286706/models/m-62f385e728dc41ed80e2590db40b5033/artifacts
+creation_timestamp: 1783259333554
+experiment_id: '494149610894286706'
+last_updated_timestamp: 1783259350497
+model_id: m-62f385e728dc41ed80e2590db40b5033
+model_type: null
+name: model
+source_run_id: ed49d069129b483fa8159572893148cc
+status: 2
+status_message: null

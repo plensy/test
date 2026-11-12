@@ -1,0 +1,104 @@
+{
+  "started_at": "2026-07-05T16:47:22.507087+00:00",
+  "ended_at": "2026-07-05T16:52:48.715514+00:00",
+  "duration_s": 326.2,
+  "success": true,
+  "steps": {
+    "bronze_taxi": {
+      "name": "bronze_taxi",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 36.1,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "bronze_zones": {
+      "name": "bronze_zones",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 16.6,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "bronze_weather": {
+      "name": "bronze_weather",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 17.2,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "silver_weather_daily": {
+      "name": "silver_weather_daily",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 15.6,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "silver_trips": {
+      "name": "silver_trips",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 103.4,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "quality_gate": {
+      "name": "quality_gate",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 66.0,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "gold_datamarts": {
+      "name": "gold_datamarts",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 35.0,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    },
+    "ml_demand_forecast": {
+      "name": "ml_demand_forecast",
+      "status": "SUCCEEDED",
+      "attempts": [
+        {
+          "attempt": 1,
+          "duration_s": 36.2,
+          "success": true,
+          "returncode": 0
+        }
+      ]
+    }
+  }
+}

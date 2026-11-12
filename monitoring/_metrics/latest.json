@@ -1,0 +1,59 @@
+{
+  "collected_at": "2026-07-07T16:24:43.895519+00:00",
+  "pipeline_success": true,
+  "pipeline_duration_s": 326.2,
+  "step_durations": {
+    "bronze_taxi": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "duration_s": 36.1
+    },
+    "bronze_zones": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "duration_s": 16.6
+    },
+    "bronze_weather": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "duration_s": 17.2
+    },
+    "silver_weather_daily": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "duration_s": 15.6
+    },
+    "silver_trips": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "duration_s": 103.4
+    },
+    "quality_gate": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "duration_s": 66.0
+    },
+    "gold_datamarts": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "duration_s": 35.0
+    },
+    "ml_demand_forecast": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "duration_s": 36.2
+    }
+  },
+  "quality_success": true,
+  "quality_pass_ratio": 1.0,
+  "rejection_rate_pct": 3.62,
+  "volumes": {
+    "bronze_taxi_rows": 9554778,
+    "bronze_weather_rows": 458003,
+    "silver_trips_rows": 9209051,
+    "gold_demand_by_zone_rows": 114539,
+    "gold_weather_impact_rows": 91,
+    "gold_tips_rows": 766,
+    "gold_demand_forecast_rows": 4240
+  }
+}

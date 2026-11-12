@@ -1,0 +1,23 @@
+artifact_path: file:///Users/selmas/Documents/PROJET%20DATA%20PIPELINE/mlruns/494149610894286706/models/m-e373f418e9224264b9474786afb24f78/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.11.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.4.2
+    skops_trusted_types: null
+mlflow_version: 3.14.0
+model_id: m-e373f418e9224264b9474786afb24f78
+model_size_bytes: 1159030
+model_uuid: m-e373f418e9224264b9474786afb24f78
+prompts: null
+run_id: 95b4bf6bc3df4c13aa0907cc376386c9
+utc_time_created: '2026-07-05 16:52:37.713039'

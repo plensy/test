@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/selmas/Documents/PROJET%20DATA%20PIPELINE/mlruns/494149610894286706/a300c44fa5d041bdb89e6573b281b5f5/artifacts
+end_time: 1783256012235
+entry_point_name: ''
+experiment_id: '494149610894286706'
+lifecycle_stage: active
+run_id: a300c44fa5d041bdb89e6573b281b5f5
+run_name: hist_gradient_boosting
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783255994851
+status: 3
+tags: []
+user_id: selmas
